@@ -79,8 +79,6 @@ export default {
     },
     dataUpdate() {
       const productNames = []
-      const buttons = document.getElementsByClassName('input-lookup-gaia')
-      console.log(buttons)
       for (let i = 0; i < this.$record.订单明细.value.length; i += 1) {
         productNames.push(this.$record.订单明细.value[i].value.品名搜选.value)
         if (!this.$record.订单明细.value[i].value.品名搜选.value) {
@@ -175,8 +173,7 @@ export default {
             },
           })
           setTimeout(() => {
-            console.log(buttons)
-            buttons[i + 1].click()
+            document.getElementsByClassName('input-lookup-gaia')[i + 1].click()
           }, 1000)
         }
       }
