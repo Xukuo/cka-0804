@@ -1,0 +1,17 @@
+.app {
+  flex: 1;
+  font-family: system-ui;
+  text-align: center;
+  background-color: #12345678;
+}
+
+#update {
+  display: inline-block;
+  padding: 10px 22px;
+  color: #fff;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  background-color: #3498db; /* Green */
+  border: none;
+}
