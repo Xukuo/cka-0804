@@ -21,7 +21,7 @@ async function updateAmount(query, deliveryAmount, category) {
     app: ordersAppId,
     query,
     fields: ['记录编号', '当月订单额', '当年订单累计', '当年退货累计', '年月'],
-  }) 
+  })
   const recordsOut = []
   const recordsIn = []
   const { records } = resp
@@ -161,24 +161,21 @@ kintone.events.on(
       table[i].value.出货数量.disabled = true
     }
 
-    if (type === 'app.record.edit.show' || type === 'app.record.edit.change.订单明细') {
-      if (type === 'app.record.edit.show') {
-        if (record.修改前实际金额.value.length === 0) {
-          record.修改前实际金额.value = record.发货金额合计.value
-        }
+    if (type === 'app.record.edit.show') {
+      if (record.修改前实际金额.value.length === 0) {
+        record.修改前实际金额.value = record.发货金额合计.value
       }
-
-      if (managers.length > 0 && managers.indexOf(manager) !== -1 && record.状态.value === '完成') {
-        for (let i = 0; i < table.length; i += 1) {
-          table[i].value.出货数量.disabled = false
-        }
+    }
+    if (managers.length > 0 && managers.indexOf(manager) !== -1 && record.状态.value === '完成') {
+      for (let i = 0; i < table.length; i += 1) {
+        table[i].value.出货数量.disabled = false
       }
     }
 
     return event
   },
 )
-kintone.events.on(['app.record.edit.submit'], (event) => {
+kintone.events.on('app.record.edit.submit', (event) => {
   const { record } = event
   if (amountBefore !== record.发货金额合计.value) {
     record.修改前实际金额.value = record.发货金额合计.value

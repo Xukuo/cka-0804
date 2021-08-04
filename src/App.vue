@@ -19,9 +19,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" :reserve-selection="true" width="55"> </el-table-column>
-        <el-table-column label="产品编号" width="120">
-          <template slot-scope="scope">{{ scope.row.产品编号.value }}</template>
-        </el-table-column>
+        <el-table-column prop="产品编号.value" label="产品编号" width="120"> </el-table-column>
         <el-table-column prop="品名.value" label="品名" width="120"> </el-table-column>
         <el-table-column prop="线下零售价.value" label="线下零售价" show-overflow-tooltip> </el-table-column>
       </el-table>
@@ -50,10 +48,14 @@ export default {
 
   created() {
     this.$kintone.events.on(
-      ['app.record.create.change.品牌', 'app.record.create.change.代理商记录编号', 'app.record.create.change.订单明细'],
+      [
+        'app.record.create.change.品牌',
+        'app.record.create.change.代理商记录编号',
+        'app.record.edit.change.品牌',
+        'app.record.edit.change.代理商记录编号',
+      ],
       (event) => {
         const { record } = event
-
         if (record.品牌.value && record.客户名称.value) {
           this.buttonShow = true
           this.$record.品牌.value = record.品牌.value
@@ -77,10 +79,12 @@ export default {
     },
     dataUpdate() {
       const productNames = []
+      const buttons = document.getElementsByClassName('input-lookup-gaia')
+      console.log(buttons)
       for (let i = 0; i < this.$record.订单明细.value.length; i += 1) {
         productNames.push(this.$record.订单明细.value[i].value.品名搜选.value)
         if (!this.$record.订单明细.value[i].value.品名搜选.value) {
-          this.$record.订单明细.value.splice(i, i + 1)
+          this.$record.订单明细.value.splice(i, 1)
         }
       }
       for (let i = 0; i < this.multipleSelection.length; i += 1) {
@@ -170,6 +174,10 @@ export default {
               },
             },
           })
+          setTimeout(() => {
+            console.log(buttons)
+            buttons[i + 1].click()
+          }, 1000)
         }
       }
       this.$kintone.app.record.set({ record: this.$record })

@@ -12,9 +12,8 @@ const client = new KintoneRestAPIClient({
     password: process.env.PASSWORD,
   },
 })
-kintone.events.on('app.record.create.show', (event) => {
+kintone.events.on(['app.record.create.show', 'app.record.edit.show'], (event) => {
   const { record } = event
-  console.log(record)
   const myContainer = document.getElementById('user-js-batch')
   Vue.config.productionTip = false
   Vue.prototype.$kintone = kintone
