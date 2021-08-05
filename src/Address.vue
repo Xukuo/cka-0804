@@ -1,5 +1,5 @@
 <template>
-  <div class="recVaddress">
+  <div class="recvAddress">
     <el-select v-if="buttonShow" v-model="address" placeholder="请选择收货地址">
       <el-option
         v-for="item in options"
@@ -112,7 +112,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.recVaddress {
+.recvAddress {
   margin-top: 37px;
 }
 </style>
