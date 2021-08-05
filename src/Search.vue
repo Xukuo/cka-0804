@@ -43,6 +43,7 @@ export default {
       multipleSelection: [],
       search: '',
       changeStatus: true,
+      record: undefined,
     }
   },
 
@@ -58,19 +59,19 @@ export default {
         const { record } = event
         if (record.品牌.value && record.客户名称.value) {
           this.buttonShow = true
-          this.$record.品牌.value = record.品牌.value
-          this.$record.客户名称.value = record.客户名称.value
         } else this.buttonShow = false
+        return event
       },
     )
   },
   methods: {
     dataSearch() {
+      const { record } = this.$kintone.app.record.get()
       this.dialogFormVisible = true
       this.$client.record
         .getRecords({
           app: 33,
-          query: `价格类别="${this.$record.客户名称.value}" and 品牌 in ("${this.$record.品牌.value}")`,
+          query: `价格类别="${record.客户名称.value}" and 品牌 in ("${record.品牌.value}")`,
         })
         .then((resp) => {
           const { records } = resp
@@ -79,15 +80,17 @@ export default {
     },
     dataUpdate() {
       const productNames = []
-      for (let i = 0; i < this.$record.订单明细.value.length; i += 1) {
-        productNames.push(this.$record.订单明细.value[i].value.品名搜选.value)
-        if (!this.$record.订单明细.value[i].value.品名搜选.value) {
-          this.$record.订单明细.value.splice(i, 1)
+      const { record } = this.$kintone.app.record.get()
+
+      for (let i = 0; i < record.订单明细.value.length; i += 1) {
+        productNames.push(record.订单明细.value[i].value.品名搜选.value)
+        if (!record.订单明细.value[i].value.品名搜选.value) {
+          record.订单明细.value.splice(i, 1)
         }
       }
       for (let i = 0; i < this.multipleSelection.length; i += 1) {
         if (!productNames.includes(this.multipleSelection[i].品名.value)) {
-          this.$record.订单明细.value.push({
+          record.订单明细.value.push({
             value: {
               产品编码: {
                 value: this.multipleSelection[i].产品编号.value,
@@ -177,7 +180,7 @@ export default {
           }, 1000)
         }
       }
-      this.$kintone.app.record.set({ record: this.$record })
+      this.$kintone.app.record.set({ record })
       this.dialogFormVisible = false
     },
     toggleSelection(rows) {
