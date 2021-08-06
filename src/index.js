@@ -16,7 +16,6 @@ const client = new KintoneRestAPIClient({
 const ordersAppId = 34
 const APP_ID = kintone.app.getId()
 const manager = kintone.getLoginUser().code
-// let statusCheck = false
 let yearMonth
 let yearMonths
 let amountBefore
@@ -87,12 +86,6 @@ kintone.events.on('app.record.detail.show', (event) => {
   const category = record.分类.value
 
   const managers = []
-  // 作用???
-  if (manager === 'Administrator') {
-    kintone.app.record.setFieldShown('其它客户', false)
-    kintone.app.record.setFieldShown('固定减折扣', false)
-    kintone.app.record.setFieldShown('零售价', false)
-  }
 
   if (record.物流担当.value.length > 0) {
     for (let i = 0; i < record.物流担当.value.length; i += 1) {
@@ -131,6 +124,7 @@ kintone.events.on('app.record.detail.show', (event) => {
         amount,
         category,
       )
+      // 默认每次更新操作都会至少更新一条订单汇总中的数据，可根据业务逻辑再做调整
       if (resp1 && resp2 && resp3) {
         client.record
           .updateRecord({
@@ -264,6 +258,7 @@ kintone.events.on('app.record.detail.process.proceed', async (event) => {
       deliveryAmount,
       category,
     )
+    // 默认每次更新操作都会至少更新一条订单汇总中的数据，可根据业务逻辑再做调整
     if (resp1 && resp2 && resp3) {
       return event
     }
