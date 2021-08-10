@@ -34,27 +34,26 @@
   }
 
   function getSumOut(record, records, type) {
-    return month === '01' || record.当年订单累计
+    return month === '01' || record.当年订单累计.value
       ? Number(record.当年订单累计.value)
       : Number(
         records.find(function(item) {
           return (
             item.年月.value === (Number(yearMonth) - 1).toString() &&
-                item.汇总区分.value === type
+              item.汇总区分.value === type
           );
         }).当年订单累计.value
       ) + Number(record.当月订单额.value);
-
   }
 
   function getSumIn(record, records, type) {
-    return month === '01' || record.当年退货累计
+    return month === '01' || record.当年退货累计.value
       ? Number(record.当年退货累计.value)
       : Number(
         records.find(function(item) {
           return (
             item.年月.value === (Number(yearMonth) - 1).toString() &&
-                item.汇总区分.value === type
+              item.汇总区分.value === type
           );
         }).当年退货累计.value
       );
