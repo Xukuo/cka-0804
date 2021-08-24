@@ -41,7 +41,8 @@ const output = resolve(__dirname, '../dist')
 
 module.exports = {
   entry: {
-    app: resolve(source, 'index.js'),
+    // app: resolve(source, 'index.js'),
+    app: resolve(source, 'order.js'),
   },
   output: {
     filename: `js/[name]${isDev ? '' : '.[contenthash:8]'}.js`,

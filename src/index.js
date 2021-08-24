@@ -53,17 +53,7 @@ kintone.events.on('app.record.detail.show', (event) => {
         .api('/k/v1/records', 'GET', {
           app: ordersAppId,
           // query: `年月 in ${yearMonths} and 客户= "${customerName}" or 年月 in ${yearMonths} and 汇总区分 in ("全区域") or 年月 in ${yearMonths} and 汇总区分 in ("各区域") and 地区= "${region}"`,
-          query:
-            '年月 in ' +
-            yearMonths +
-            ' and 客户= "' +
-            customerName +
-            '" or 年月 in ' +
-            yearMonths +
-            ' and 汇总区分 in ("全区域") or 年月 in ' +
-            yearMonths +
-            ' and 汇总区分 in ("各区域") and 地区= "' +
-            region+'"',
+          query: `年月 in ${yearMonths} and 客户= "${customerName}" or 年月 in ${yearMonths} and 汇总区分 in ("全区域") or 年月 in ${yearMonths} and 汇总区分 in ("各区域") and 地区= "${region}"`,
           fields: ['记录编号', '当月订单额', '当年订单累计', '当年退货累计', '年月', '汇总区分'],
         })
         .then((resp1) => {
@@ -248,8 +238,8 @@ kintone.events.on('app.record.edit.show', (event) => {
   }
 
   if (record.状态.value !== '未处理') {
-    for(let i=0;i<record.length;i+=1){
-      record[i].disabled=true
+    for (let i = 0; i < record.length; i += 1) {
+      record[i].disabled = true
     }
     // record.订货编号.disabled = true
     // record.分类.disabled = true
@@ -285,20 +275,20 @@ kintone.events.on('app.record.edit.show', (event) => {
     }, 100)
   }
   if (record.状态.value === '未处理') {
-    var el = kintone.app.record.getSpaceElement('rcvAddr')
+    const el = kintone.app.record.getSpaceElement('rcvAddr')
     el.style.padding = '30px 0 0 0'
-    var btnEl = document.createElement('select')
+    const btnEl = document.createElement('select')
     btnEl.id = 'receivingAddress'
     btnEl.style.width = '200px'
     btnEl.style.height = '40px'
     el.appendChild(btnEl)
     $('#receivingAddress').append('<option value="-1">请选择收货地址</option>')
 
-    var optionStr = ''
+    let optionStr = ''
 
-    var body = {
-      app: 30, //代理商应用appID
-      id: record['代理商记录编号']['value'],
+    const body = {
+      app: 30, // 代理商应用appID
+      id: record['代理商记录编号'].value,
     }
 
     kintone.api(
@@ -306,19 +296,17 @@ kintone.events.on('app.record.edit.show', (event) => {
       'GET',
       body,
       function (resp) {
-        // success
-        // var {record} = kintone.app.record.get()
-        var respRecord = resp.record
+        const respRecord = resp.record
         console.log(respRecord)
         console.log(record)
-        var table = respRecord['表格']['value']
-        for (var i = 0; i < table.length; i++) {
-          optionStr += '<option value="' + table[i]['id'] + '"'
+        const table = respRecord['表格'].value
+        for (let i = 0; i < table.length; i++) {
+          optionStr += `<option value="${table[i].id}"`
           optionStr += "selected='selected'"
-          optionStr += '>' + table[i]['value']['单行文本框_7']['value'] + '</option>'
+          optionStr += `>${table[i].value['单行文本框_7'].value}</option>`
         }
         $('#receivingAddress').append(optionStr)
-        //默认选择
+        // 默认选择
         $('#receivingAddress').find("option:contains('record.送货地址.value')").attr('selected', true)
       },
       function (error) {
@@ -326,13 +314,13 @@ kintone.events.on('app.record.edit.show', (event) => {
         console.log(error)
       },
     )
-    //如果客户名称发生变化了把相关联的收货地址值填进去
+    // 如果客户名称发生变化了把相关联的收货地址值填进去
     $('#receivingAddress').change(function () {
-      var record = kintone.app.record.get()
+      const record = kintone.app.record.get()
 
-      var body = {
-        app: 30, //代理商应用appID
-        id: record['record']['代理商记录编号']['value'],
+      const body = {
+        app: 30, // 代理商应用appID
+        id: record.record['代理商记录编号'].value,
       }
 
       kintone.api(
@@ -341,21 +329,21 @@ kintone.events.on('app.record.edit.show', (event) => {
         body,
         function (resp) {
           // success
-          var record = kintone.app.record.get()
-          var respRecord = resp.record
+          const record = kintone.app.record.get()
+          const respRecord = resp.record
           if ($('#receivingAddress option:selected').text() == '请选择收货地址') {
-            record['record']['收货人']['value'] = ''
-            record['record']['电话']['value'] = ''
-            record['record']['订货员']['value'] = ''
-            record['record']['送货地址']['value'] = ''
+            record.record['收货人'].value = ''
+            record.record['电话'].value = ''
+            record.record['订货员'].value = ''
+            record.record['送货地址'].value = ''
           } else {
-            var table = respRecord['表格']['value']
-            for (var i = 0; i < table.length; i++) {
-              if ($('#receivingAddress option:selected').text() == table[i]['value']['单行文本框_7']['value']) {
-                record['record']['收货人']['value'] = table[i]['value']['单行文本框_8']['value']
-                record['record']['电话']['value'] = table[i]['value']['单行文本框_9']['value']
-                record['record']['订货员']['value'] = table[i]['value']['单行文本框_10']['value']
-                record['record']['送货地址']['value'] = table[i]['value']['单行文本框_7']['value']
+            const table = respRecord['表格'].value
+            for (let i = 0; i < table.length; i++) {
+              if ($('#receivingAddress option:selected').text() == table[i].value['单行文本框_7'].value) {
+                record.record['收货人'].value = table[i].value['单行文本框_8'].value
+                record.record['电话'].value = table[i].value['单行文本框_9'].value
+                record.record['订货员'].value = table[i].value['单行文本框_10'].value
+                record.record['送货地址'].value = table[i].value['单行文本框_7'].value
                 break
               }
             }
@@ -407,17 +395,7 @@ kintone.events.on('app.record.detail.process.proceed', (event) => {
       .api('/k/v1/records', 'GET', {
         app: ordersAppId,
         // query: `年月 in ${yearMonths} and 客户= "${customerName}" or 年月 in ${yearMonths} and 汇总区分 in ("全区域") or 年月 in ${yearMonths} and 汇总区分 in ("各区域") and 地区= "${region}"`,
-        query:
-          '年月 in ' +
-          yearMonths +
-          ' and 客户= ' +
-          customerName +
-          ' or 年月 in ' +
-          yearMonths +
-          ' and 汇总区分 in ("全区域") or 年月 in ' +
-          yearMonths +
-          ' and 汇总区分 in ("各区域") and 地区= ' +
-          region,
+        query: `年月 in ${yearMonths} and 客户= ${customerName} or 年月 in ${yearMonths} and 汇总区分 in ("全区域") or 年月 in ${yearMonths} and 汇总区分 in ("各区域") and 地区= ${region}`,
         fields: ['记录编号', '当月订单额', '当年订单累计', '当年退货累计', '年月', '汇总区分'],
       })
       .then((resp1) => {
@@ -577,20 +555,20 @@ kintone.events.on(['app.record.create.change.订单明细', 'app.record.edit.cha
 
 kintone.events.on(['app.record.create.change.代理商记录编号', 'app.record.edit.change.代理商记录编号'], (event) => {
   const { record } = event
-  if (record['代理商记录编号']['value'] == undefined) {
+  if (record['代理商记录编号'].value == undefined) {
     $('#receivingAddress').empty()
     $('#receivingAddress').append('<option value="-1">请选择收货地址</option>')
 
-    record['收货人']['value'] = ''
-    record['电话']['value'] = ''
-    record['订货员']['value'] = ''
-    record['送货地址']['value'] = ''
+    record['收货人'].value = ''
+    record['电话'].value = ''
+    record['订货员'].value = ''
+    record['送货地址'].value = ''
 
     return event
   }
 
-  //客户名称】包含其他，【其他客户】文本框自动显示否则隐藏
-  var customer = record['客户名称']['value']
+  // 客户名称】包含其他，【其他客户】文本框自动显示否则隐藏
+  const customer = record['客户名称'].value
   if (customer) {
     if (customer.search('其他') != -1) {
       kintone.app.record.setFieldShown('其它客户', true)
@@ -601,11 +579,11 @@ kintone.events.on(['app.record.create.change.代理商记录编号', 'app.record
     kintone.app.record.setFieldShown('其它客户', false)
   }
 
-  var optionStr = ''
+  let optionStr = ''
 
-  var body = {
-    app: 30, //代理商应用appID
-    id: record['代理商记录编号']['value'],
+  const body = {
+    app: 30, // 代理商应用appID
+    id: record['代理商记录编号'].value,
   }
 
   kintone.api(
@@ -614,16 +592,16 @@ kintone.events.on(['app.record.create.change.代理商记录编号', 'app.record
     body,
     function (resp) {
       // success
-      var record = kintone.app.record.get()
-      var respRecord = resp.record
-      var table = respRecord['表格']['value']
-      for (var i = 0; i < table.length; i++) {
-        optionStr += '<option value="' + table[i]['id'] + '"'
+      const record = kintone.app.record.get()
+      const respRecord = resp.record
+      const table = respRecord['表格'].value
+      for (let i = 0; i < table.length; i++) {
+        optionStr += `<option value="${table[i].id}"`
         optionStr += "selected='selected'"
-        optionStr += '>' + table[i]['value']['单行文本框_7']['value'] + '</option>'
+        optionStr += `>${table[i].value['单行文本框_7'].value}</option>`
       }
       $('#receivingAddress').append(optionStr)
-      //默认选择
+      // 默认选择
       $('#receivingAddress').find("option:contains('请选择收货地址')").attr('selected', true)
     },
     function (error) {
@@ -632,13 +610,13 @@ kintone.events.on(['app.record.create.change.代理商记录编号', 'app.record
     },
   )
 
-  //如果客户名称发生变化了把相关联的收货地址值填进去
+  // 如果客户名称发生变化了把相关联的收货地址值填进去
   $('#receivingAddress').change(function () {
-    var record = kintone.app.record.get()
+    const record = kintone.app.record.get()
 
-    var body = {
-      app: 30, //代理商应用appID
-      id: record['record']['代理商记录编号']['value'],
+    const body = {
+      app: 30, // 代理商应用appID
+      id: record.record['代理商记录编号'].value,
     }
 
     kintone.api(
@@ -647,21 +625,21 @@ kintone.events.on(['app.record.create.change.代理商记录编号', 'app.record
       body,
       function (resp) {
         // success
-        var record = kintone.app.record.get()
-        var respRecord = resp.record
+        const record = kintone.app.record.get()
+        const respRecord = resp.record
         if ($('#receivingAddress option:selected').text() === '请选择收货地址') {
-          record['record']['收货人']['value'] = ''
-          record['record']['电话']['value'] = ''
-          record['record']['订货员']['value'] = ''
-          record['record']['送货地址']['value'] = ''
+          record.record['收货人'].value = ''
+          record.record['电话'].value = ''
+          record.record['订货员'].value = ''
+          record.record['送货地址'].value = ''
         } else {
-          var table = respRecord['表格']['value']
-          for (var i = 0; i < table.length; i++) {
-            if ($('#receivingAddress option:selected').text() === table[i]['value']['单行文本框_7']['value']) {
-              record['record']['收货人']['value'] = table[i]['value']['单行文本框_8']['value']
-              record['record']['电话']['value'] = table[i]['value']['单行文本框_9']['value']
-              record['record']['订货员']['value'] = table[i]['value']['单行文本框_10']['value']
-              record['record']['送货地址']['value'] = table[i]['value']['单行文本框_7']['value']
+          const table = respRecord['表格'].value
+          for (let i = 0; i < table.length; i++) {
+            if ($('#receivingAddress option:selected').text() === table[i].value['单行文本框_7'].value) {
+              record.record['收货人'].value = table[i].value['单行文本框_8'].value
+              record.record['电话'].value = table[i].value['单行文本框_9'].value
+              record.record['订货员'].value = table[i].value['单行文本框_10'].value
+              record.record['送货地址'].value = table[i].value['单行文本框_7'].value
               break
             }
           }

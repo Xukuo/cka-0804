@@ -1,0 +1,24 @@
+{
+  // 使用 IntelliSense 了解相关属性。
+  // 悬停以查看现有属性的描述。
+  // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "针对 localhost 启动 Edge",
+      // "url": "https://localhost:8080/",
+      "program": "${workspaceFolder}\\scripts\\server.js",
+      // "webRoot": "${workspaceFolder}/js/app.js",
+      // "runtimeExecutable": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Port",
+      "address": "https://ucard.cybozu.cn/k/37",
+      "port": 5858
+    }
+  ]
+}
